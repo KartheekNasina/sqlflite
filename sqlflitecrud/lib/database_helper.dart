@@ -1,3 +1,6 @@
+import 'dart:io';
+
+import 'package:path_provider/path_provider.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 
@@ -17,7 +20,9 @@ class DatabaseHelper {
   }
 
   _initDatabase() async {
-    String path = join(await getDatabasesPath(), _databaseName);
+    Directory datadirectory= await getApplicationDocumentsDirectory();
+    String path = join(datadirectory.path, _databaseName);
+    print("db location"+datadirectory.path);
     return await openDatabase(path,
         version: _databaseVersion, onCreate: _onCreate);
   }
@@ -33,7 +38,6 @@ class DatabaseHelper {
   }
 
 // CRUD operations will be implemented here
-  // Create a new user
 Future<int> createUser(String name, String email) async {
   Database db = await instance.database;
   return await db.insert(usersTable, {'name': name, 'email': email});
